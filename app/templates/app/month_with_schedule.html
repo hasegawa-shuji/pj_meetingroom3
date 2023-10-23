@@ -1,0 +1,64 @@
+{% extends 'app/base.html' %}
+{% block content %}
+    <style>
+        table {
+            table-layout: fixed;
+        }
+
+        td > div {
+            height: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    </style>
+
+<h4><div class="text-center my-1">カレンダー</div></h4>
+    <div class="my-2 mb-2">
+    <a href="{% url 'app:month_with_schedule' month_previous.year month_previous.month %}">前月</a>
+    {{ month_current | date:"Y年m月" }}
+    <a href="{% url 'app:month_with_schedule' month_next.year month_next.month %}">次月</a>
+    </div>
+    <table class="table table-bordered bg-light">
+        <thead class="thead-light">
+        <tr>
+            {% for weekName in week_names %}
+            <th scope="col" class="text-center text-primary">{{ weekName }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for week_day_schedles in month_day_schedules %}
+            <tr>
+                {% for day, schedules in week_day_schedles.items %}
+                    {% if now == day %}
+                        <td class="text-center table-success" width="100">
+                    {% else %}
+                        <td class="text-center" width="100">
+                    {% endif %}
+
+                    {% if month_current.month != day.month %}
+                        <a href="{% url 'app:room' day.year day.month day.day %}">
+                        {{ day | date:"m/d" }}
+                        </a>
+                        {% for booked in booking_data %}
+                            {% if day == booked.start %}
+                                {{ booked.remarks }}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <a href="{% url 'app:room' day.year day.month day.day %}">
+                        {{ day.day }}
+                        </a>
+                        {% for booked in booking_data %}
+                            {% if day == booked.start %}
+                                {{ booked.remarks }}
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

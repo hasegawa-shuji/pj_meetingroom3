@@ -1,0 +1,42 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<div class="text-center my-3">
+    <div class="mb-3">
+        <h1>予約表</h1>
+        <h5>{{ year }}年{{ month }}月{{ day }}日</h5>
+    </div>
+    <div class="">
+        <table class="table table-bordered bg-light">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-center text-primary">時間</th>
+                        {% for roomName in room_data %}
+                            <th scope="col" class="text-primary">{{ roomName }}</th>
+                        {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for hour, schedules in calendar.items %}
+                        <tr>
+                            <td scope='row'>{{ hour }}:00</td>
+                            {% for roomdate, book in schedules.items %}
+                            <td>
+                                {% if book %}
+                                    <a href="{% url 'app:booking' roomdate.0.pk roomdate.1.year roomdate.1.month roomdate.1.day hour %}">
+                                        <i class="far fa-circle text-info"></i>
+                                    </a>
+                                {% else %}
+                                    <i class="fas fa-times text-danger"></i>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
