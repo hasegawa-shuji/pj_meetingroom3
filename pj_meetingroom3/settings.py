@@ -92,11 +92,22 @@ WSGI_APPLICATION = 'pj_meetingroom3.wsgi.application'
 #     }
 # }
 
-default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
+## default_dburl = 'sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3')
 
+## DATABASES = {
+##     'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+## }
+
+import dj_database_url
+from dotenv import (
+    find_dotenv,
+    load_dotenv,
+)
+load_dotenv(find_dotenv())
 DATABASES = {
-    'default': config('DATABASE_URL', default=default_dburl, cast=dburl),
+    'default': dj_database_url.config(conn_max_age=600),
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -128,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
